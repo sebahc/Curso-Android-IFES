@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/sebahc/Developer/Workspace-AStudio/LifeCycle/app/libs/android-support-v13.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="ecda966839090a41b29a9239d44bafc06fdadb87">
+        <dex dex="/Users/sebahc/Developer/Workspace-AStudio/LifeCycle/app/build/intermediates/pre-dexed/debug/android-support-v13-e919642af05fe768b5cc2000b8a5b87252cdda44.jar" />
+    </item>
+    <item
+        jar="/Users/sebahc/Developer/Workspace-ifes/LifeCycle/app/libs/android-support-v13.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="ecda966839090a41b29a9239d44bafc06fdadb87">
+        <dex dex="/Users/sebahc/Developer/Workspace-ifes/LifeCycle/app/build/intermediates/pre-dexed/debug/android-support-v13-110bedb2a2e4e3d5ce44ec84d6089be6e85deb75.jar" />
+    </item>
+
+</items>
