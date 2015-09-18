@@ -1,6 +1,7 @@
 
 package com.example.clothingstore.Utils;
 
+import android.os.StrictMode;
 import android.util.Log;
 
 import org.apache.http.HttpEntity;
@@ -41,6 +42,9 @@ public class JSONParser {
     public JSONObject makeHttpRequest(String url, String method,
                                       List<NameValuePair> params) {
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         // Making HTTP request
         try {
 
@@ -61,6 +65,7 @@ public class JSONParser {
                 DefaultHttpClient httpClient = new DefaultHttpClient();
                 String paramString = URLEncodedUtils.format(params, "utf-8");
                 url += "?" + paramString;
+                Log.d("url",url);
                 HttpGet httpGet = new HttpGet(url);
 
                 HttpResponse httpResponse = httpClient.execute(httpGet);

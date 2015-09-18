@@ -111,12 +111,51 @@ public class ListadoActivity extends ListActivity implements AdapterView.OnItemC
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Intent mIntent= new Intent(getApplicationContext(),EditarCamisas.class);
             mIntent.putExtra("idShirt",id);
-            startActivity(mIntent);
+
+            // starting new activity and expecting some response back
+            startActivityForResult(mIntent, 100);
+            //startActivity(mIntent);
+    }
+
+    // Response from Edit Product Activity
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // if result code 100
+        if (resultCode == 100) {
+            // if result code 100 is received
+            // means user edited/deleted product
+            // reload this screen again
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
+
     }
 
     @Override
     protected void onRestart(){
         super.onRestart();
+
+       /* if (isOnline()) {
+
+            // Loading products in Background Thread
+            new LoadAllProducts().execute();
+
+        }else{
+            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+            alertDialog.setTitle("Red Desconectada...");
+            alertDialog.setMessage("Conectese a una Red e intente nuevamente");
+            alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                    // here you can add functions
+                }
+            });
+            //alertDialog.setIcon(R.drawable.ic_launcher);
+            alertDialog.show();
+        }*/
 
     }
 

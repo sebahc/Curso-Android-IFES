@@ -149,4 +149,4 @@
         android:layout_span="2"
         android:width="50dp"
         android:onClick="volverEditar"/>
-</LinearLayout><!-- From: file:/Users/sebahc/Developer/Repos/Curso-Android-IFES/ClothingStore(web)/app/src/main/res/layout/activity_editar_camisas.xml -->
+</LinearLayout><!-- From: file:/Users/sebahc/Developer/Workspace-ifes/ClothingStore2/app/src/main/res/layout/activity_editar_camisas.xml -->
