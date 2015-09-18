@@ -4,4 +4,4 @@
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" android:showAsAction="never" />
 </menu>
-<!-- From: file:/Users/sebahc/Developer/Workspace-ifes/ClothingStore2/app/src/main/res/menu/menu_listado.xml -->
+<!-- From: file:/Users/sebahc/Developer/Repos/Curso-Android-IFES/ClothingStore(web)/app/src/main/res/menu/menu_listado.xml -->

@@ -2,29 +2,17 @@ package com.example.clothingstore;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
-import com.example.clothingstore.Utils.JSONParser;
 import com.example.clothingstore.model.Shirt;
 import com.example.clothingstore.model.ShirtDataSource;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class EditarCamisas extends Activity {
 
@@ -34,40 +22,11 @@ public class EditarCamisas extends Activity {
     private EditText txtStock;
     private RadioButton radioButton;
 
-    private String descripcion="";
-    private String precio="";
-    private String stock="";
-    private char colorCode='N';
-    String image_url="";
+    private char colorCode;
+    private ShirtDataSource dataSource;
 
+    private Shirt mShirt;
     private long idShirt;
-
-     // Progress Dialog
-    private ProgressDialog pDialog;
-
-    // JSON parser class
-    JSONParser jsonParser = new JSONParser();
-
-    // single product url
-    private static final String url_shirt_details = "http://api.latamlabs.com/back_clothing/get_shirt_details.php";
-
-    // url to update product
-    private static final String url_update_shirt = "http://api.latamlabs.com/back_clothing/update_shirt.php";
-
-    // url to delete product
-    private static final String url_delete_shirt = "http://api.latamlabs.com/back_clothing/delete_shirt.php";
-
-    // JSON Node names
-    private static final String TAG_SUCCESS = "success";
-
-    private static final String TAG_SHIRT = "shirt";
-    private static final String TAG_ID = "id_shirt";
-    private static final String TAG_DESCRIPTION = "description";
-    private static final String TAG_IMAGE = "image_url";
-    private static final String TAG_PRICE = "price";
-    private static final String TAG_COLOR = "color";
-    private static final String TAG_STOCK = "qtystock";
-
 
 
 
@@ -89,9 +48,44 @@ public class EditarCamisas extends Activity {
         //Intent mIntent = getIntent();
         //idShirt= mIntent.getLongExtra("idShirt", 0);
 
-        // Getting complete product details in background thread
-        new GetProductDetails().execute();
+        // creamos la conex BD
+        dataSource= new ShirtDataSource(this);
 
+        // abrimos la conex
+        try {
+            dataSource.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // creo un obj tipo Shirt para guardar los datos recuperados
+        mShirt= new Shirt();
+
+        // realizo la consulta a BD y lo guardo
+        mShirt=dataSource.getShirt(idShirt);
+
+        // Asocio los view en XML con las variables que creamos anteriormente
+        txtDescripcion = (EditText) findViewById(R.id.txtDescripcion);
+        txtPrecio=(EditText) findViewById(R.id.txtPrecio);
+        txtStock=(EditText) findViewById(R.id.txtStock);
+
+        // seteamos los datos de mShirt en los editText
+        txtDescripcion.setText(mShirt.getDescription());
+
+        // cuando el dato es numerico lo parseo a formato String
+        txtPrecio.setText(String.valueOf(mShirt.getPrice()));
+        txtStock.setText(String.valueOf(mShirt.getQuantityInStock()));
+
+        //busco el RadioButton que corresponde al color por ID
+        colorCode=mShirt.getColorCode();
+
+        radioButton=(RadioButton) findViewById(colorAViewId(colorCode));
+
+        // ponemos q quede selecionado el radiobutton
+        radioButton.setChecked(true);
+
+        //cerramos la conex a la BD
+        dataSource.close();
 
     }
     /*
@@ -115,16 +109,29 @@ public class EditarCamisas extends Activity {
     }
 
     public void guardarEditar(View view){
+        try {
+            dataSource.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-        descripcion= txtDescripcion.getText().toString();
-        precio= txtPrecio.getText().toString();
-        stock= txtStock.getText().toString();
+        String descripcion= txtDescripcion.getText().toString();
+        Double precio= Double.parseDouble(txtPrecio.getText().toString());
+        int stock= Integer.parseInt(txtStock.getText().toString());
 
-        // colorCode lo obtuve con el otro metodo
+        // recuperamos el color con el metodo clickradioButton
 
+        //en realidad mi Objeto Shirt ya tiene cargado el id anteriormente, desde el llenarDatos()
+        // pero
+        mShirt.setID(idShirt);
+        mShirt.setDescription(descripcion);
+        mShirt.setPrice(precio);
+        mShirt.setQuantityInStock(stock);
+        mShirt.setColorCode(colorCode);
 
-        // starting background task to update product
-        new SaveProductDetails().execute();
+        dataSource.updateShirt(mShirt);
+
+        dataSource.close();
 
         // Creamos un objeto del tipo Dialog para mostrar que los cambios
         // fueron guardados
@@ -168,6 +175,11 @@ public class EditarCamisas extends Activity {
 
     public void eliminarEditar(View view){
         // abrimos la conex
+        try {
+            dataSource.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
         dialogo.setTitle("Importante");
@@ -176,12 +188,9 @@ public class EditarCamisas extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // usamos un metodo del datasource para borrar un registro pasando el ID
-
-                // deleting product in background thread
-                new DeleteProduct().execute();
-
+                dataSource.deleteShirt(idShirt);
                 // cerramos la conex y la Activity
-
+                dataSource.close();
                 finish();
 
             }
@@ -191,7 +200,7 @@ public class EditarCamisas extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // cuando cancelamos no hace nada en particular, solo cerramos la conex
-
+                dataSource.close();
 
             }
         });
@@ -202,233 +211,6 @@ public class EditarCamisas extends Activity {
 
     public void volverEditar(View view){
         finish();
-    }
-
-    /**
-     * Background Async Task to Get complete product details
-     * */
-    class GetProductDetails extends AsyncTask<String, String, String> {
-
-        /**
-         * Before starting background thread Show Progress Dialog
-         * */
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(EditarCamisas.this);
-            pDialog.setMessage("Cargando camisa. Por favor espere...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            pDialog.show();
-        }
-
-        /**
-         * Getting product details in background thread
-         * */
-        protected String doInBackground(String... params) {
-
-            // updating UI from Background Thread
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    // Check for success tag
-                    int success;
-                    try {
-                        // Building Parameters
-                        List<NameValuePair> params = new ArrayList<NameValuePair>();
-                        params.add(new BasicNameValuePair("id", Long.toString(idShirt)));
-
-                        Log.d("Single Shirt Details", Long.toString(idShirt));
-
-                        // getting product details by making HTTP request
-                        // Note that product details url will use GET request
-                        JSONObject json = jsonParser.makeHttpRequest(
-                                url_shirt_details, "GET", params);
-
-                        // check your log for json response
-                        Log.d("Single Shirt Details", json.toString());
-
-                        // json success tag
-                        success = json.getInt(TAG_SUCCESS);
-                        if (success == 1) {
-                            // successfully received product details
-                            JSONArray shirtObj = json
-                                    .getJSONArray(TAG_SHIRT); // JSON Array
-
-                            // get first product object from JSON Array
-                            JSONObject shirt = shirtObj.getJSONObject(0);
-
-
-                            // Asocio los view en XML con las variables que creamos anteriormente
-                            txtDescripcion = (EditText) findViewById(R.id.txtDescripcion);
-                            txtPrecio=(EditText) findViewById(R.id.txtPrecio);
-                            txtStock=(EditText) findViewById(R.id.txtStock);
-
-                            // seteamos los datos de Shirt en los editText
-                            txtDescripcion.setText(shirt.getString(TAG_DESCRIPTION));
-                            txtPrecio.setText(shirt.getString(TAG_PRICE));
-                            txtStock.setText(shirt.getString(TAG_STOCK));
-
-                            //busco el RadioButton que corresponde al color por ID
-                            colorCode=shirt.getString(TAG_COLOR).charAt(0);
-
-                            radioButton=(RadioButton) findViewById(colorAViewId(colorCode));
-
-                            // ponemos q quede selecionado el radiobutton
-                            radioButton.setChecked(true);
-
-
-                        }else{
-                            // product with pid not found
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-
-            return null;
-        }
-
-        /**
-         * After completing background task Dismiss the progress dialog
-         * **/
-        protected void onPostExecute(String file_url) {
-            // dismiss the dialog once got all details
-            pDialog.dismiss();
-        }
-    }
-
-    /**
-     * Background Async Task to  Save product Details
-     * */
-    class SaveProductDetails extends AsyncTask<String, String, String> {
-
-        /**
-         * Before starting background thread Show Progress Dialog
-         * */
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(EditarCamisas.this);
-            pDialog.setMessage("Guardando camisa...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();
-        }
-
-        /**
-         * Saving product
-         * */
-        protected String doInBackground(String... args) {
-
-            // Building Parameters
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair(TAG_ID, Long.toString(idShirt)));
-            params.add(new BasicNameValuePair(TAG_DESCRIPTION, descripcion));
-            params.add(new BasicNameValuePair(TAG_IMAGE, image_url));
-            params.add(new BasicNameValuePair(TAG_PRICE, precio));
-            params.add(new BasicNameValuePair(TAG_COLOR, Character.toString(colorCode)));
-            params.add(new BasicNameValuePair(TAG_STOCK, stock));
-
-            // sending modified data through http request
-            // Notice that update product url accepts POST method
-            JSONObject json = jsonParser.makeHttpRequest(url_update_shirt,
-                    "POST", params);
-
-
-
-            // check json success tag
-            try {
-                int success = json.getInt(TAG_SUCCESS);
-
-                if (success == 1) {
-                    // successfully updated
-                    Intent i = getIntent();
-                    // send result code 100 to notify about product update
-                    setResult(100, i);
-                    finish();
-                } else {
-                    // failed to update product
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        /**
-         * After completing background task Dismiss the progress dialog
-         * **/
-        protected void onPostExecute(String file_url) {
-            // dismiss the dialog once product uupdated
-            pDialog.dismiss();
-        }
-    }
-
-    /*****************************************************************
-     * Background Async Task to Delete Product
-     * */
-    class DeleteProduct extends AsyncTask<String, String, String> {
-
-        /**
-         * Before starting background thread Show Progress Dialog
-         * */
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(EditarCamisas.this);
-            pDialog.setMessage("Borrando Camisa...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            pDialog.show();
-        }
-
-        /**
-         * Deleting product
-         * */
-        protected String doInBackground(String... args) {
-
-            // Check for success tag
-            int success;
-            try {
-                // Building Parameters
-                List<NameValuePair> params = new ArrayList<NameValuePair>();
-                params.add(new BasicNameValuePair(TAG_ID,Long.toString(idShirt)));
-
-                // getting product details by making HTTP request
-                JSONObject json = jsonParser.makeHttpRequest(
-                        url_delete_shirt, "POST", params);
-
-                // check your log for json response
-                Log.d("Delete Product", json.toString());
-
-                // json success tag
-                success = json.getInt(TAG_SUCCESS);
-                if (success == 1) {
-                    // product successfully deleted
-                    // notify previous activity by sending code 100
-                    Intent i = getIntent();
-                    // send result code 100 to notify about product deletion
-                    setResult(100, i);
-                    finish();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        /**
-         * After completing background task Dismiss the progress dialog
-         * **/
-        protected void onPostExecute(String file_url) {
-            // dismiss the dialog once product deleted
-            pDialog.dismiss();
-
-        }
-
     }
 
 

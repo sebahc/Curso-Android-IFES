@@ -23,4 +23,4 @@
         android:textColor="#FFFFFF"
         android:id="@+id/textView3" />
 </LinearLayout>
-<!-- From: file:/Users/sebahc/Developer/Workspace-ifes/ClothingStore2/app/src/main/res/layout/header.xml -->
+<!-- From: file:/Users/sebahc/Developer/Repos/Curso-Android-IFES/ClothingStore(web)/app/src/main/res/layout/header.xml -->
