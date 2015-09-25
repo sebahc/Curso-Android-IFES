@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">My App UI</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string-array name="countries_array">
+        <item>Afghanistan</item>
+        <item>Albania</item>
+        <item>Algeria</item>
+        <item>American Samoa</item>
+        <item>Andorra</item>
+        <item>Angola</item>
+        <item>Anguilla</item>
+        <item>Antarctica</item>
+        <item>Argentina</item>
+    </string-array>
+    <string name="title_activity_splash">SplashActivity</string>
+</resources>
