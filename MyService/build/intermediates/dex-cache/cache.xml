@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/sebahc/Developer/libs/sdk/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67">
+        <dex dex="/Users/sebahc/Developer/workspace-work/MyService/app/build/intermediates/pre-dexed/debug/support-v4-19.1.0-71722a6993005cded39db9738ef5835b01142831.jar" />
+    </item>
+    <item
+        jar="/Users/sebahc/Developer/workspace-work/MyService/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/19.1.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="3499ceba05ca1f6037c6a2fad73df8f636224a28">
+        <dex dex="/Users/sebahc/Developer/workspace-work/MyService/app/build/intermediates/pre-dexed/debug/classes-bdd48ee976e5e21d48d6363e9968b9446c209e8d.jar" />
+    </item>
+
+</items>
