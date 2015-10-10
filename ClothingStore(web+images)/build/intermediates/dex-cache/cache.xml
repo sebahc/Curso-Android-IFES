@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/sebahc/Developer/Workspace-ifes/ClothingStore2/app/build/intermediates/exploded-aar/com.android.support/support-v13/22.2.1/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="c4caf832116bca1f2e140bf1fb600e2edd190837">
+        <dex dex="/Users/sebahc/Developer/Workspace-ifes/ClothingStore2/app/build/intermediates/pre-dexed/debug/classes-42ca9ceeb5ebbea41f8bd4d00074536029dfcf59.jar" />
+    </item>
+    <item
+        jar="/Users/sebahc/.gradle/caches/modules-2/files-2.1/com.squareup.picasso/picasso/2.5.2/7446d06ec8d4f7ffcc53f1da37c95f200dcb9387/picasso-2.5.2.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="7446d06ec8d4f7ffcc53f1da37c95f200dcb9387">
+        <dex dex="/Users/sebahc/Developer/Workspace-ifes/ClothingStore2/app/build/intermediates/pre-dexed/debug/picasso-2.5.2-bf98aefc2830c5848a632750d743ae4413cbc371.jar" />
+    </item>
+    <item
+        jar="/Users/sebahc/Developer/Workspace-ifes/ClothingStore2/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="f8efd0096475e0daf054267b61544e10dc776503">
+        <dex dex="/Users/sebahc/Developer/Workspace-ifes/ClothingStore2/app/build/intermediates/pre-dexed/debug/classes-5f9edb91d2aba332b9146c361cf08a993b5c3145.jar" />
+    </item>
+    <item
+        jar="/Users/sebahc/Developer/Workspace-ifes/ClothingStore2/app/build/intermediates/exploded-aar/com.android.support/support-v13/22.2.1/jars/libs/internal_impl-22.2.1.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="6fc4c7067459e8d69e1bbcb3a8973cdd84d5d87b">
+        <dex dex="/Users/sebahc/Developer/Workspace-ifes/ClothingStore2/app/build/intermediates/pre-dexed/debug/internal_impl-22.2.1-c7e34a7f1e2b1010bc6f79c7026844634db397b0.jar" />
+    </item>
+    <item
+        jar="/Users/sebahc/Developer/Workspace-ifes/ClothingStore2/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/jars/libs/internal_impl-22.2.1.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="c471eaaba13ff64f6e0383d1c30a9cdc9a97efeb">
+        <dex dex="/Users/sebahc/Developer/Workspace-ifes/ClothingStore2/app/build/intermediates/pre-dexed/debug/internal_impl-22.2.1-8bb40122d08aedc9f20816413e6ceaf9f015a2ba.jar" />
+    </item>
+
+</items>
